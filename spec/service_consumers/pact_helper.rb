@@ -25,7 +25,7 @@ Pact.service_provider "Imminence API" do
     else
       base_url = "https://pact-broker.cloudapps.digital"
       path = "pacts/provider/#{url_encode(name)}/consumer/#{url_encode(consumer_name)}"
-      version_modifier = "versions/#{url_encode(ENV.fetch('PACT_CONSUMER_VERSION', 'branch-master'))}"
+      version_modifier = "versions/#{url_encode(ENV.fetch('PACT_CONSUMER_VERSION', 'branch-imminence-areas-pact'))}"
 
       pact_uri("#{base_url}/#{path}/#{version_modifier}")
     end
@@ -42,6 +42,13 @@ Pact.provider_states_for "GDS API Adapters" do
     set_up do
       service = create(:service, slug: "number-plate-supplier")
       create(:place, service_slug: service.slug, latitude: 50.742754933617285, longitude: -1.9552618901330387)
+    end
+  end
+
+  provider_state "places exist with postcodes" do
+    set_up do
+      service = create(:service, slug: "local-authority")
+      create(:place, service_slug: service.slug, postcode: "WC2B 6SE")
     end
   end
 end
