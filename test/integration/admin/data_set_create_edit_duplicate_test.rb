@@ -33,6 +33,18 @@ class DataSetCreateEditTest < ActionDispatch::IntegrationTest
       assert_equal 0.10033740198112132, place.lng
     end
 
+    should "reject a file that isn't labelled as CSV" do
+      visit "/admin/services/#{@service.id}"
+
+      within "#new-data" do
+        attach_file "Data file", fixture_file_path("bad_name_format.xlsx")
+        click_button "Create Data set"
+      end
+
+      @service.reload
+      assert_equal 1, @service.data_sets.count
+    end
+
     should "handle a CSV in a different file encoding" do
       stub_locations_api_has_location("IG6 3HJ", [{ "latitude" => 51.59918278577261, "longitude" => 0.10033740198112132 }])
 
